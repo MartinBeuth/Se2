@@ -22,7 +22,7 @@ public class Customer
         this.status=Status.New;
     }
 
-    private String getId() {
+    public String getId() {
         return id;
     }
 
@@ -42,7 +42,7 @@ public class Customer
         return status;
     }
 
-    private void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -64,4 +64,3 @@ public class Customer
 
 
 }
-
