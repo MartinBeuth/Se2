@@ -17,7 +17,7 @@ import java.util.Optional;
  * @author Jens Schauder
  */
 
-@SuppressWarnings("hiding")
+/*@SuppressWarnings("hiding")*/
 public interface CrudRepository<Customer, String>{
         /**
          * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the

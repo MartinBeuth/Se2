@@ -11,7 +11,7 @@ public class Customer
     enum Status{
         New,InRegistration,Active,Suspended,Deleted;
     }
-    private Status status;
+    public Status status;
 
 
     public Customer(String id, String lastName, String firstName, String contact, Status status){
