@@ -4,11 +4,11 @@ import java.time.*;
 
 public class Customer
 {
-    private String id;
-    private String lastName;
-    private String firstName;
-    private String contact;
-    enum Status{
+    public String id;
+    public String lastName;
+    public String firstName;
+    public String contact;
+    public enum Status{
         New,InRegistration,Active,Suspended,Deleted;
     }
     public Status status;
@@ -26,19 +26,19 @@ public class Customer
         return id;
     }
 
-    private String getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
-    private String getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    private String getContact() {
+    public String getContact() {
         return contact;
     }
 
-    private Status getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -46,19 +46,19 @@ public class Customer
         this.id = id;
     }
 
-    private void setLastName(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    private void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    private void setContact(String contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 
-    private void setStatus(Status status){
+    public void setStatus(Status status){
         this.status = status;
     }
 
