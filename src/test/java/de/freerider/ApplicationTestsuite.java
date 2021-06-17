@@ -11,9 +11,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)		// JUnit 4
 @SelectClasses( {
-	de.freerider.SampleTests.class})
-	//de.freerider.model.CustomerTest.class})
-	//de.freerider.repository.CustomerRepositoryTest.class})
+	de.freerider.SampleTests.class,
+	de.freerider.model.CustomerTest.class,
+	de.freerider.repository.CustomerRepositoryTest.class})
 	
 class ApplicationTestsuite {
 

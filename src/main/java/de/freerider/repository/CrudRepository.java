@@ -1,5 +1,7 @@
 package de.freerider.repository;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 
 
@@ -18,6 +20,8 @@ import java.util.Optional;
  */
 
 /*@SuppressWarnings("hiding")*/
+
+@Repository
 public interface CrudRepository<Customer, String>{
         /**
          * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the

@@ -1,255 +1,186 @@
+
 package de.freerider.repository;
 import de.freerider.model.Customer;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
+
+
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
+
 
 @Component
-class CustomerRepository implements CrudRepository<Customer, String> {
+public class CustomerRepository implements CrudRepository<Customer, String> {
 
-	private CrudRepository crudrepository;
-	private final IDGenerator idGen = new IDGenerator( "C", IDGenerator.IDTYPE.NUM, 6 );
+	
+	private Map<String, Customer> so = new HashMap<String, Customer>();
+	private final IDGenerator idGen = new IDGenerator("C",
+			IDGenerator.IDTYPE.NUM, 6);
 	
 
-	/*long count();*/
+	/* long count(); */
 	@Override
 	public long count() {
-		long count = crudrepository.count();
+		long count = so.size();
 		return count;
 	}
 
-	/*<S extends Customer> S save( S entity );*/
+	/* <S extends Customer> S save( S entity ); */
 	@Override
 	public <S extends Customer> S save(S entity) {
-		if (entity.getId()=="" || entity.getId()==null ){
-			entity.setId(idGen.nextId());
-			crudrepository.save(entity);
+		Customer customer = entity;
+		if (entity != null) {
+			String id = entity.getId();
+			if (id == null || id.length() == 0 || id.equals("")) {
+				do {
+					id = idGen.nextId();
+				} while (so.containsKey(id));
+				entity.setId(id);
 			}
-		if(crudrepository.existsById(entity.getId())==false){
-			entity.setId(idGen.nextId());
-			crudrepository.save(entity);
-			}
-		else{
-		crudrepository.save(entity);
+			customer = so.put(id, entity);
+			return customer == null ? entity : (S) customer;
+		} else {
+			throw new IllegalArgumentException("argument: entitity is null");
 		}
-		return entity;
 	}
 
-	/*<S extends Customer> Iterable<S> saveAll( Iterable<S> entities );*/
+	/* <S extends Customer> Iterable<S> saveAll( Iterable<S> entities ); */
 	@Override
 	public <S extends Customer> Iterable<S> saveAll(Iterable<S> entities) {
-		Iterable<S> response = crudrepository.saveAll(entities);
-		return (Iterable<S>) response;
+		if (entities != null) {
+			List<S> saved = new ArrayList<S>();
+			for (S e : entities) {
+				S savedEntity = save(e);
+				saved.add(savedEntity);
+			}
+			return saved;
+		} else {
+			throw new IllegalArgumentException("entities are null");
+		}
 	}
 
-	/*Optional<Customer> findById(String id );*/
+	/* Optional<Customer> findById(String id ); */
 	@Override
 	public Optional<Customer> findById(String id) {
-		Optional<Customer> customerResponse = crudrepository.findById(id);
-		return customerResponse;
-
+		if (id != null) {
+			if (id.length() == 0 || id.equals("")){
+				System.out.println("Not a correct Id");			
+			}
+			return Optional.of(so.get(id));
+		} else {
+			throw new IllegalArgumentException("enity is null");
+		}
 	}
 
-	/*Iterable<Customer> findAllById(Iterable<String> ids );*/
+	/* Iterable<Customer> findAllById(Iterable<String> ids ); */
 	@Override
 	public Iterable<Customer> findAllById(Iterable<String> ids) {
-		Iterable<Customer> customerResponse = crudrepository.findAllById(ids);
-		return customerResponse;
+
+		Iterable<Customer> customers = new ArrayList<>();
+		if (ids != null) {
+			for (String id : ids) {
+				((ArrayList<Customer>) customers).add(so.get(id));
+			}
+			return customers;
+		} else {
+			throw new IllegalArgumentException("enity is null");
+		}
 	}
 
-	/*Iterable<Customer> findAll();*/
+	/* Iterable<Customer> findAll(); */
 	@Override
 	public Iterable<Customer> findAll() {
-		Iterable<Customer> customerResponse = (Iterable<Customer>) crudrepository
-				.findAll();
-		return customerResponse;
+
+		Set set = so.entrySet();
+
+		if (set.isEmpty() == true) {
+			return null;
+		} else {
+			return set;
+		}
+
 	}
 
-	/*boolean existsById(String id );*/
+	/* boolean existsById(String id ); */
 	@Override
 	public boolean existsById(String id) {
-		return crudrepository.existsById(id);
+
+		if (id == null){
+				throw new IllegalArgumentException("argument: entitity is null");			
+			}
+		if (id != null  || id.length() != 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	/*void deleteById(String id );*/
+	/* void deleteById(String id ); */
 	@Override
 	public void deleteById(String id) {
-		crudrepository.deleteById(id);
+		if (id != null) {
+			so.remove(id);
+		}
+		else {
+			throw new IllegalArgumentException("enity is null");
+		}
 
 	}
 
-	/*void delete(Customer entity );*/
+	/* void delete(Customer entity ); */
 	@Override
 	public void delete(Customer entity) {
-		crudrepository.delete(entity);
+		if (entity != null) {
+			deleteById(entity.getId());
 
+		} else {
+			throw new IllegalArgumentException("enity is null");
+		}
 	}
 
-	/*void deleteAllById(Iterable<? extends String> ids );*/
+	/* void deleteAllById(Iterable<? extends String> ids ); */
 	@Override
 	public void deleteAllById(Iterable<? extends String> ids) {
-		crudrepository.deleteAll(ids);
-
+		
+		
+		if (ids != null) {
+			ids.forEach(this::deleteById);
+		} else {
+			throw new IllegalArgumentException("enity is null");
+		}
 	}
 
-	/*void deleteAll();*/
+	/* void deleteAll() */
+
 	@Override
 	public void deleteAll() {
-		crudrepository.deleteAll();
+		so.clear();
 	}
 
-	/*void deleteAll(Iterable<? extends Customer> entities );*/
 	@Override
 	public void deleteAll(Iterable<? extends Customer> entities) {
-		crudrepository.deleteAll(entities);
+		if (entities != null) {
+			for (Customer e : entities) {
+				delete(e);
+			}
+
+		} else {
+			throw new IllegalArgumentException("entities are null");
+		}
 	}
-	public static void main(String[] args){
-
-		CustomerRepository zumTesten = new CustomerRepository();
-		IDGenerator idGen = new IDGenerator( "C", IDGenerator.IDTYPE.NUM, 6 );
-		
-		
-
-		Customer eins =new Customer(idGen.nextId(),"Doe","John","Street 1",null);
-		Customer zwei =new Customer(idGen.nextId(),"Doe","Sue","Street 2",null);
-		Customer drei =new Customer(idGen.nextId(),"Snow","John","Street 3",null);
-		Customer vier =new Customer(idGen.nextId(),"John","John","Street 4", null);
-		Customer fuenf =new Customer(idGen.nextId(),"Bravo","Johnny","Street 5",null);
-		/*save*/
-		zumTesten.save(eins);
-		zumTesten.save(zwei);
-		zumTesten.save(drei);
-		zumTesten.save(vier);
-		zumTesten.save(fuenf);
-
-		/*----------------------------------------------------------------------------------------*/
-		/*save*/
-		zumTesten.save(eins);
-		zumTesten.save(zwei);
-		zumTesten.save(drei);
-		zumTesten.save(vier);
-		zumTesten.save(fuenf);
-		
-		/*----------------------------------------------------------------------------------------*/
-		/*boolean existsById(String id );*/
-		System.out.println(zumTesten.existsById(eins.getId()));
-		System.out.println(zumTesten.existsById(zwei.getId()));
-		System.out.println(zumTesten.existsById(drei.getId()));
-		System.out.println(zumTesten.existsById(vier.getId()));
-		System.out.println(zumTesten.existsById(fuenf.getId()));
-		
-		/*----------------------------------------------------------------------------------------*/
-		/*Optional<Customer> findById(String id );*/
-		System.out.println(zumTesten.findById(eins.getId()));
-		System.out.println(zumTesten.findById(zwei.getId()));
-		System.out.println(zumTesten.findById(drei.getId()));
-		System.out.println(zumTesten.findById(vier.getId()));
-		System.out.println(zumTesten.findById(fuenf.getId()));
-		
-		/*----------------------------------------------------------------------------------------*/
-		/*Iterable<Customer> findAllById(Iterable<String> ids );*/
-		List<String> data = new ArrayList<>();
-        data.add(eins.getId());
-        data.add(zwei.getId());
-        data.add(drei.getId());
-        data.add(vier.getId());
-        data.add(fuenf.getId());
-        System.out.println(zumTesten.findAllById(data));
-        
-        /*----------------------------------------------------------------------------------------*/
-        /*findAll*/
-		System.out.println(zumTesten.findAll());
-		
-		/*----------------------------------------------------------------------------------------*/
-		/*count*/
-		System.out.println(zumTesten.count());
-		
-		/*----------------------------------------------------------------------------------------*/
-		/*void deleteById(String id );*/
-        zumTesten.deleteById(eins.getId());
-		zumTesten.deleteById(zwei.getId());
-		zumTesten.deleteById(drei.getId());
-		zumTesten.deleteById(vier.getId());
-		zumTesten.deleteById(fuenf.getId());
-		
-		
-		eins =new Customer(idGen.nextId(),"Doe","John","Street 1",null);
-		zwei =new Customer(idGen.nextId(),"Doe","Sue","Street 2",null);
-		drei =new Customer(idGen.nextId(),"Snow","John","Street 3",null);
-		vier =new Customer(idGen.nextId(),"John","John","Street 4",null);
-		fuenf =new Customer(idGen.nextId(),"Bravo","Johnny","Street 5",null);
-		
-		
-		zumTesten.save(eins);
-		zumTesten.save(zwei);
-		zumTesten.save(drei);
-		zumTesten.save(vier);
-		zumTesten.save(fuenf);
-				
-		/*----------------------------------------------------------------------------------------*/       
-        /*void delete(Customer entity );*/
-        zumTesten.delete(eins);
-        zumTesten.delete(zwei);
-        zumTesten.delete(drei);
-        zumTesten.delete(vier);
-        zumTesten.delete(fuenf);
-        
-        eins =new Customer(idGen.nextId(),"Doe","John","Street 1",null);
-		zwei =new Customer(idGen.nextId(),"Doe","Sue","Street 2",null);
-		drei =new Customer(idGen.nextId(),"Snow","John","Street 3",null);
-		vier =new Customer(idGen.nextId(),"John","John","Street 4",null);
-		fuenf =new Customer(idGen.nextId(),"Bravo","Johnny","Street 5",null);
-		
-		
-		zumTesten.save(eins);
-		zumTesten.save(zwei);
-		zumTesten.save(drei);
-		zumTesten.save(vier);
-		zumTesten.save(fuenf);
-		
-		
-		List<Customer> data2 = new ArrayList<>();
-        data2.add(eins);
-        data2.add(zwei);
-        data2.add(drei);
-        data2.add(vier);
-        data2.add(fuenf);
-        
-        /*----------------------------------------------------------------------------------------*/
-        /*save All*/
-        zumTesten.saveAll(data2);
-        
-        /*----------------------------------------------------------------------------------------*/
-        /*delete All*/
-        zumTesten.deleteAll(data2);
-        
-        eins =new Customer(idGen.nextId(),"Doe","John","Street 1",null);
-		zwei =new Customer(idGen.nextId(),"Doe","Sue","Street 2",null);
-		drei =new Customer(idGen.nextId(),"Snow","John","Street 3",null);
-		vier =new Customer(idGen.nextId(),"John","John","Street 4",null);
-		fuenf =new Customer(idGen.nextId(),"Bravo","Johnny","Street 5",null);
-		
-		
-		zumTesten.save(eins);
-		zumTesten.save(zwei);
-		zumTesten.save(drei);
-		zumTesten.save(vier);
-		zumTesten.save(fuenf);
-		
-		data = new ArrayList<>();
-        data.add(eins.getId());
-        data.add(zwei.getId());
-        data.add(drei.getId());
-        data.add(vier.getId());
-        data.add(fuenf.getId());
-        
-        /*----------------------------------------------------------------------------------------*/
-        /*void deleteAllById(Iterable<? extends String> ids );*/
-        zumTesten.deleteAllById(data);        
 
 
-	}
+
+	
+
 	
 
 }
