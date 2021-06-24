@@ -36,6 +36,7 @@ public class Customer
     public String getId() {
         return id;
     }
+    
 
     public String getLastName() {
     	return lastName;
@@ -51,11 +52,15 @@ public class Customer
     }
 
     public Status getStatus() {
+    	
         return status;
     }
 
     public void setId(String id) {
-        this.id = id;
+    	if(this.id ==null || id==null){
+    		this.id=id;
+    	}
+    	
     }
 
     public void setLastName(String lastName) {

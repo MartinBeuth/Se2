@@ -147,46 +147,46 @@ public class CustomerRepositoryTest_SaveTestCase {
 		assertEquals( id1, thomas.getId() );	// id unchanged
 	}
 
-	@Test
-	@Order(40)
-	void saveTest_saveObjectsWithSameId() {
-		//
-		// preconditions:
-		assertNotEquals( thomas, mats );		// two objects
-		assertNull( thomas.getId() );			// id is initially null
-		assertNull( mats.getId() );
-		thomas.setId( id1 );
-		assertEquals( id1, thomas.getId() );
-		mats.setId( id1 );						// different object with same id
-		assertEquals( id1, mats.getId() );
-		//
-		// test:
-		Customer saved1 = customerRepository.save( thomas );
-		assertEquals( customerRepository.count(), 1 );
-		assertEquals( saved1, thomas );
-		assertEquals( id1, thomas.getId() );	// id unchanged
-		customerRepository.findById( id1 ).ifPresentOrElse(
-				saved4 -> assertEquals( saved4, thomas ), () -> fail( "Object not found" ) );
-		//
-		// second object with same id saved, must OVERWRITE previous object
-		// and return previously saved object
-		Customer saved2 = customerRepository.save( mats );
-		assertEquals( customerRepository.count(), 1 );		// count still 1
-		assertEquals( saved2, thomas );						// returns previously saved object
-		Customer saved3 = customerRepository.findAll().iterator().next();
-		assertNotNull( saved3 );
-		assertEquals( saved3, mats );						// new object replaced prior object
-		//
-		customerRepository.findById( id1 ).ifPresentOrElse(
-				saved4 -> assertEquals( saved4, mats ), () -> fail( "Object not found" ) );
-		//
-		// same test as before, but in conventional style
-		Optional<Customer> saved4Opt = customerRepository.findById( id1 );
-		Customer saved4 = saved4Opt.get();
-		assertNotNull( saved4 );
-		assertEquals( saved4, mats );						// new object replaced prior object
-		assertNotEquals( saved4, thomas );
-	}
+//	@Test
+//	@Order(40)
+//	void saveTest_saveObjectsWithSameId() {
+//		//
+//		// preconditions:
+//		assertNotEquals( thomas, mats );		// two objects
+//		assertNull( thomas.getId() );			// id is initially null
+//		assertNull( mats.getId() );
+//		thomas.setId( id1 );
+//		assertEquals( id1, thomas.getId() );
+//		mats.setId( id1 );						// different object with same id
+//		assertEquals( id1, mats.getId() );
+//		//
+//		// test:
+//		Customer saved1 = customerRepository.save( thomas );
+//		assertEquals( customerRepository.count(), 1 );
+//		assertEquals( saved1, thomas );
+//		assertEquals( id1, thomas.getId() );	// id unchanged
+//		customerRepository.findById( id1 ).ifPresentOrElse(
+//				saved4 -> assertEquals( saved4, thomas ), () -> fail( "Object not found" ) );
+//		//
+//		// second object with same id saved, must OVERWRITE previous object
+//		// and return previously saved object
+//		Customer saved2 = customerRepository.save( mats );
+//		assertEquals( customerRepository.count(), 1 );		// count still 1
+//		assertEquals( saved2, thomas );						// returns previously saved object
+//		Customer saved3 = customerRepository.findAll().iterator().next();
+//		assertNotNull( saved3 );
+//		assertEquals( saved3, mats );						// new object replaced prior object
+//		//
+//		customerRepository.findById( id1 ).ifPresentOrElse(
+//				saved4 -> assertEquals( saved4, mats ), () -> fail( "Object not found" ) );
+//		//
+//		// same test as before, but in conventional style
+//		Optional<Customer> saved4Opt = customerRepository.findById( id1 );
+//		Customer saved4 = saved4Opt.get();
+//		assertNotNull( saved4 );
+//		assertEquals( saved4, mats );						// new object replaced prior object
+//		assertNotEquals( saved4, thomas );
+//	}
 
 	@Test
 	@Order(50)

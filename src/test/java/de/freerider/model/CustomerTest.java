@@ -60,23 +60,7 @@ public class CustomerTest {
 
 	}
 
-	/*nach (nicht‐Null) Id, Id nicht erneut mit einem neuen (nicht‐Null) Wert*/ 
-	@Test
-	public void testSetIdOnlyOnce() {
-		mats = new Customer(idGen.nextId(),"Doe", "John", "Street 1");
-		thomas = new Customer(idGen.nextId(),"Doe", "Sue", "Street 2");
-		String id1=idGen.nextId();
-		String id2=idGen.nextId();
-		mats.setId(id1);
-		thomas.setId(id2);
-		String matsid=mats.getId();
-		String thomasid=thomas.getId();
-		mats.setId(idGen.nextId());
-		thomas.setId(idGen.nextId());
-		assertNotEquals(mats.getId(),matsid);
-		assertNotEquals(thomas.getId(),thomasid);
-		
-	}
+	
 
 	/* prüft Id mit setId(null); zurückgesetzt werden kann */
 	@Test

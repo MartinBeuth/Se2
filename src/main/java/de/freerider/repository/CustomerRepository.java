@@ -71,10 +71,8 @@ public class CustomerRepository implements CrudRepository<Customer, String> {
 	@Override
 	public Optional<Customer> findById(String id) {
 		if (id != null) {
-			if (id.length() == 0 || id.equals("")){
-				System.out.println("Not a correct Id");			
-			}
-			return Optional.of(so.get(id));
+			Customer found =so.get(id);
+			return Optional.ofNullable(found);
 		} else {
 			throw new IllegalArgumentException("enity is null");
 		}
@@ -87,7 +85,12 @@ public class CustomerRepository implements CrudRepository<Customer, String> {
 		Iterable<Customer> customers = new ArrayList<>();
 		if (ids != null) {
 			for (String id : ids) {
-				((ArrayList<Customer>) customers).add(so.get(id));
+				Customer found = so.get(id);
+				if(found !=null){
+					((ArrayList<Customer>) customers).add(found);
+					
+				}
+				
 			}
 			return customers;
 		} else {
@@ -116,11 +119,12 @@ public class CustomerRepository implements CrudRepository<Customer, String> {
 		if (id == null){
 				throw new IllegalArgumentException("argument: entitity is null");			
 			}
-		if (id != null  || id.length() != 0) {
-			return true;
-		} else {
-			return false;
-		}
+//		if (id != null  || id.length() != 0) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return findById(id).isPresent();
 	}
 
 	/* void deleteById(String id ); */

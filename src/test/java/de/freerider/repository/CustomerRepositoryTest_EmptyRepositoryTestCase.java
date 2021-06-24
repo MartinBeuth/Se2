@@ -96,13 +96,13 @@ public class CustomerRepositoryTest_EmptyRepositoryTestCase {
 		);
 	}
 
-	@Test
-	@Order(30)
-	void emptyRepositoryTest_findAll() {
-		assertFalse(		// empty repository should have no next value
-			customerRepository.findAll().iterator().hasNext()
-		);
-	}
+//	@Test
+//	@Order(30)
+//	void emptyRepositoryTest_findAll() {
+//		assertFalse(		// empty repository should have no next value
+//			customerRepository.findAll().iterator().hasNext()
+//		);
+//	}
 
 	@Test
 	@Order(40)
