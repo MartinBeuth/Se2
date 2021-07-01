@@ -1,190 +1,103 @@
-
 package de.freerider.repository;
-import de.freerider.model.Customer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-
-
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import de.freerider.datamodel.Customer;
 
 
+/**
+ * Customer-Repository implementation of the CrudRepository<Customer, String>
+ * interface using an internal HashMap<String, Customer>.
+ * 
+ * @Component with @Qualifier to differentiate from other components of the
+ * CrudRepository<Customer, String> interface.
+ * 
+ */
 
+/*
+ * REPLACE CustomerRepository.java with your implementation.
+ * //
+ * KEEP @Qualifier("CustomerRepository_Impl") annotation.
+ */
 
 @Component
-public class CustomerRepository implements CrudRepository<Customer, String> {
+@Qualifier("CustomerRepository_Impl")
+class CustomerRepository implements CrudRepository<Customer, String> {
+	//
+	private final IDGenerator idGen = new IDGenerator( "C", IDGenerator.IDTYPE.NUM, 6 );
 
-	
-	private Map<String, Customer> so = new HashMap<String, Customer>();
-	private final IDGenerator idGen = new IDGenerator("C",
-			IDGenerator.IDTYPE.NUM, 6);
-	
 
-	/* long count(); */
 	@Override
-	public long count() {
-		long count = so.size();
-		return count;
+	public <S extends Customer> S save( S entity ) {
+		// TODO Auto-generated method stub
+		return entity;
 	}
 
-	/* <S extends Customer> S save( S entity ); */
 	@Override
-	public <S extends Customer> S save(S entity) {
-		Customer customer = entity;
-		if (entity != null) {
-			String id = entity.getId();
-			if (id == null || id.length() == 0 || id.equals("")) {
-				do {
-					id = idGen.nextId();
-				} while (so.containsKey(id));
-				entity.setId(id);
-			}
-			customer = so.put(id, entity);
-			return customer == null ? entity : (S) customer;
-		} else {
-			throw new IllegalArgumentException("argument: entitity is null");
-		}
+	public <S extends Customer> Iterable<S> saveAll( Iterable<S> entities ) {
+		// TODO Auto-generated method stub
+		Iterable<S> result = List.of();		// return empty, immutable list
+		return result;
 	}
 
-	/* <S extends Customer> Iterable<S> saveAll( Iterable<S> entities ); */
 	@Override
-	public <S extends Customer> Iterable<S> saveAll(Iterable<S> entities) {
-		if (entities != null) {
-			List<S> saved = new ArrayList<S>();
-			for (S e : entities) {
-				S savedEntity = save(e);
-				saved.add(savedEntity);
-			}
-			return saved;
-		} else {
-			throw new IllegalArgumentException("entities are null");
-		}
+	public Optional<Customer> findById( String id ) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
 	}
 
-	/* Optional<Customer> findById(String id ); */
 	@Override
-	public Optional<Customer> findById(String id) {
-		if (id != null) {
-			Customer found =so.get(id);
-			return Optional.ofNullable(found);
-		} else {
-			throw new IllegalArgumentException("enity is null");
-		}
+	public boolean existsById( String id ) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	/* Iterable<Customer> findAllById(Iterable<String> ids ); */
-	@Override
-	public Iterable<Customer> findAllById(Iterable<String> ids) {
-
-		Iterable<Customer> customers = new ArrayList<>();
-		if (ids != null) {
-			for (String id : ids) {
-				Customer found = so.get(id);
-				if(found !=null){
-					((ArrayList<Customer>) customers).add(found);
-					
-				}
-				
-			}
-			return customers;
-		} else {
-			throw new IllegalArgumentException("enity is null");
-		}
-	}
-
-	/* Iterable<Customer> findAll(); */
 	@Override
 	public Iterable<Customer> findAll() {
-
-		Set set = so.entrySet();
-
-		if (set.isEmpty() == true) {
-			return null;
-		} else {
-			return set;
-		}
-
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/* boolean existsById(String id ); */
 	@Override
-	public boolean existsById(String id) {
-
-		if (id == null){
-				throw new IllegalArgumentException("argument: entitity is null");			
-			}
-//		if (id != null  || id.length() != 0) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-		return findById(id).isPresent();
+	public Iterable<Customer> findAllById( Iterable<String> ids ) {
+		// TODO Auto-generated method stub
+		Iterable<Customer> result = List.of();		// return empty, immutable list
+		return result;
 	}
 
-	/* void deleteById(String id ); */
 	@Override
-	public void deleteById(String id) {
-		if (id != null) {
-			so.remove(id);
-		}
-		else {
-			throw new IllegalArgumentException("enity is null");
-		}
-
+	public long count() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-	/* void delete(Customer entity ); */
 	@Override
-	public void delete(Customer entity) {
-		if (entity != null) {
-			deleteById(entity.getId());
-
-		} else {
-			throw new IllegalArgumentException("enity is null");
-		}
+	public void deleteById( String id ) {
+		// TODO Auto-generated method stub
 	}
 
-	/* void deleteAllById(Iterable<? extends String> ids ); */
 	@Override
-	public void deleteAllById(Iterable<? extends String> ids) {
-		
-		
-		if (ids != null) {
-			ids.forEach(this::deleteById);
-		} else {
-			throw new IllegalArgumentException("enity is null");
-		}
+	public void delete( Customer entity ) {
+		// TODO Auto-generated method stub
 	}
 
-	/* void deleteAll() */
+	@Override
+	public void deleteAllById( Iterable<? extends String> ids ) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void deleteAll( Iterable<? extends Customer> entities ) {
+		// TODO Auto-generated method stub
+	}
 
 	@Override
 	public void deleteAll() {
-		so.clear();
+		// TODO Auto-generated method stub
 	}
-
-	@Override
-	public void deleteAll(Iterable<? extends Customer> entities) {
-		if (entities != null) {
-			for (Customer e : entities) {
-				delete(e);
-			}
-
-		} else {
-			throw new IllegalArgumentException("entities are null");
-		}
-	}
-
-
-
-	
-
-	
 
 }
